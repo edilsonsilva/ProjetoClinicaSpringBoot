@@ -13,51 +13,53 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.edilson.clinicaapi.model.Paciente;
-import br.com.edilson.clinicaapi.repository.PacienteRepository;
+import br.com.edilson.clinicaapi.model.Medico;
+import br.com.edilson.clinicaapi.repository.MedicoRepository;
 
 @RestController
-@RequestMapping("/paciente")
-public class PacienteController {
-
+@RequestMapping("/medico")
+public class MedicoController {
+	/*
+	 * A anotação Autowired gera um objeto do 
+	 * MedicoRepository em tempo de execução, ou seja,
+	 * no momento de rodar a aplicação.
+	 */
 	@Autowired
-	private PacienteRepository pr;
+	private MedicoRepository mr;
 	
 	@GetMapping("/listar")
-	public List<Paciente> listar(){
-		return pr.findAll();
+	public List<Medico> listar(){
+		return mr.findAll();
 	}
-	
-	@GetMapping("/pesquisar/{id}")
-	public Optional<Paciente> pesquisarId(@PathVariable Long id) {
-		return pr.findById(id);
-	}
-	
-	
 	
 	@PostMapping("/cadastro")
-	public String cadastro(@RequestBody Paciente paciente) {
-		pr.save(paciente);
-		return "Paciente cadastrado com sucesso!";
+	public String cadastro(@RequestBody Medico medico) {
+		mr.save(medico);
+		return "Médico cadastrado com sucesso!";
 	}
 	
 	@PutMapping("/atualizar/{id}")
-	public String atualizar(@PathVariable Long id,@RequestBody Paciente paciente) {
-	
-		Optional<Paciente> pac = pr.findById(id); 
+	public String atualizar(@RequestBody Medico medico, @PathVariable Long id) {
+		Optional<Medico> me = mr.findById(id);
 		
-		if(!pac.isPresent()) {
-			return "Paciente não localizado";
+		if(!me.isPresent()) {
+			return "O médico não foi localizado";
 		}
-		paciente.setIdPaciente(id);
-		pr.save(paciente);
-		return "Dados do paciente atulizados";
-	}	
+		
+		medico.setIdMedico(id);
+		mr.save(medico);
+		return "Médico atualizado com sucesso";
+		
+	}
 	
 	@DeleteMapping("/apagar/{id}")
 	public String apagar(@PathVariable Long id) {
-		pr.deleteById(id);
-		return "Paciente apagado";		
+		mr.deleteById(id);
+		return "Médico apagado";
 	}
-	
+
 }
+
+
+
+
